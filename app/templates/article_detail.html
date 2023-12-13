@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ object.title }}{% endblock %}
+
+{% block content %}
+    <div style="display: flex;">
+        <div style="width: 40%;">
+            <h2>{{ object.title }}</h2>
+            <p>{{ object.content }}</p>
+            <p>Author: {{ object.author.username }}</p>
+            <p>Created at: {{ object.created_at }}</p>
+            <div class="card-buttons">
+                {% if user.is_authenticated and user == object.author %}
+                    <a href="{% url 'article_update' pk=object.pk %}" class="btn btn-warning">Update</a>
+                    <a href="{% url 'article_delete' pk=object.pk %}" class="btn btn-danger">Delete</a>
+                {% endif %}
+            </div>
+    
+            <h3>Comments</h3>
+            {% for comment in comments %}
+                <p>{{ comment.content }} by {{ comment.author.username }}</p>
+                <div class="card-buttons">
+                    {% if user.is_authenticated and user == comment.author %}
+                        <a href="{% url 'comment_update' pk=comment.pk %}" class="btn btn-warning">Update</a>
+                        <a href="{% url 'comment_delete' pk=comment.pk %}" class="btn btn-danger">Delete</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+    
+            <form method="post" action="{% url 'article_detail' pk=object.pk %}">
+                {% csrf_token %}
+                {{ comment_form.as_p }}
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+        </div>
+        <div style="width: 70%; text-align: right;">
+            {% if article.image %}
+                <img src="{{ article.image.url }}">
+            {% else %}
+                <p>No image available</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

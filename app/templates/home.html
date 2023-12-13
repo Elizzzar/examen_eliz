@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <h2>Welcome {{ user_obj.username }}!</h2>
+    <div class="row">
+        {% for article in articles %}
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-body">
+                {% if article.image %}
+                    <img src="{{ article.image.url }}" class="img-fluid">
+                {% endif %}
+                <h5 class="card-title"><a href="{% url 'article_detail' pk=article.pk %}">{{ article.title }}</a></h5>
+                <p class="card-text">{{ article.content }}</p>
+                <p class="card-text">Author: {{ article.author.username }}</p>
+                <p class="card-text">Created at: {{ article.created_at }}</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+    </div>
+    
+    <div class="pagination">
+        <span class="step-links">
+            {% if articles.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ articles.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ articles.number }} of {{ articles.paginator.num_pages }}.
+            </span>
+
+            {% if articles.has_next %}
+                <a href="?page={{ articles.next_page_number }}">next</a>
+                <a href="?page={{ articles.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    
+
+    <footer style="background-color: black; color: white; padding: 20px; bottom: 0; width: 100%;">
+        <div class="container">
+            <p>Функционал сайта:</p>
+            <ul>
+                <li>Просмотр статей</li>
+                <li>Создание новых статей</li>
+                <li>Редактирование статей</li>
+                <li>Удаление статей</li>
+                <li>Создание комментариев под каждой статьей</li>
+                <li>Регистрация(через почту)</li>
+                <li>Аутентификация</li>
+            </ul>
+        </div>
+    </footer>
+{% endblock %}
